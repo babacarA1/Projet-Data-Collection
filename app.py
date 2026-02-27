@@ -865,72 +865,11 @@ elif page == "📊 Dashboard":
 elif page == "📝 Évaluation":
     st.markdown('<h1>📝 Évaluation de l\'application</h1>', unsafe_allow_html=True)
 
-    tab_form, tab_kobo, tab_resultats = st.tabs([
+    tab_kobo, tab_resultats = st.tabs([
         "✍️ Formulaire intégré",
         "🔗 Lien externe (Kobo / Google Forms)",
         "📊 Résultats des évaluations"
-    ])
-
-    # ── Formulaire intégré ────────────────────────────────────
-    with tab_form:
-        st.markdown(
-            "<p style='color:#8aab8c; margin-bottom:20px;'>"
-            "Votre avis nous aide à améliorer l'application. "
-            "Merci de prendre 2 minutes pour répondre.</p>",
-            unsafe_allow_html=True
-        )
-
-        with st.form("evaluation_form", clear_on_submit=True):
-            col1, col2 = st.columns(2)
-            with col1:
-                nom   = st.text_input("👤 Nom / Prénom", placeholder="Ex : Ibrahima Diallo")
-            with col2:
-                email = st.text_input("📧 Email (optionnel)", placeholder="exemple@email.com")
-
-            st.markdown("**⭐ Note globale de l'application**")
-            note = st.select_slider(
-                "Note globale",
-                options=[1, 2, 3, 4, 5],
-                value=4,
-                format_func=lambda x: "⭐" * x,
-                label_visibility="collapsed"
-            )
-
-            st.markdown("**🎯 Évaluation détaillée** *(1 = Très mauvais · 5 = Excellent)*")
-            c1, c2, c3 = st.columns(3)
-            with c1:
-                facilite  = st.slider("🖱️ Facilité d'utilisation", 1, 5, 4)
-            with c2:
-                design    = st.slider("🎨 Design & Interface", 1, 5, 4)
-            with c3:
-                dashboard = st.slider("📊 Qualité du dashboard", 1, 5, 4)
-
-            commentaire = st.text_area(
-                "💬 Commentaires & suggestions",
-                placeholder="Qu'est-ce qui pourrait être amélioré ? Qu'avez-vous apprécié ?",
-                height=120
-            )
-
-            submitted = st.form_submit_button("📨 Soumettre mon évaluation", use_container_width=True)
-
-            if submitted:
-                if not nom.strip():
-                    st.error("❌ Veuillez entrer votre nom.")
-                else:
-                    conn = get_conn()
-                    conn.execute(
-                        """INSERT INTO evaluations
-                           (nom, email, note, facilite, design, dashboard, commentaire)
-                           VALUES(?,?,?,?,?,?,?)""",
-                        (nom.strip(), email.strip(), note,
-                         facilite, design, dashboard, commentaire.strip())
-                    )
-                    conn.commit()
-                    conn.close()
-                    st.success(
-                        f"✅ Merci **{nom}** ! Votre évaluation a bien été enregistrée. 🎉"
-                    )
-                    st.balloons()
+    ])   
 
     # ── Lien externe ──────────────────────────────────────────
     with tab_kobo:
@@ -938,7 +877,7 @@ elif page == "📝 Évaluation":
         <div style="margin-bottom:20px;">
             <p style="color:#8aab8c;">
                 Vous pouvez également soumettre votre évaluation via les formulaires
-                externes ci-dessous (KoboToolbox ou Google Forms).
+                externes ci-dessous (KoboToolbox).
             </p>
         </div>
         """, unsafe_allow_html=True)
@@ -964,30 +903,7 @@ elif page == "📝 Évaluation":
                 use_container_width=True
             )
 
-        with col_g:
-            st.markdown("""
-            <div class="dl-card" style="text-align:center; padding:32px 20px;">
-                <div style="font-size:3rem; margin-bottom:12px;">📝</div>
-                <div style="font-weight:700; color:#f5a623; font-size:1.1rem; margin-bottom:8px;">
-                    Google Forms
-                </div>
-                <div style="color:#8aab8c; font-size:.85rem; margin-bottom:20px; line-height:1.6;">
-                    Formulaire d'évaluation Google Forms, accessible depuis
-                    n'importe quel appareil sans compte requis.
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-            st.link_button(
-                "📝 Ouvrir Google Forms",
-                "https://forms.gle/VOTRE_FORMULAIRE",
-                use_container_width=True
-            )
-
-        st.info(
-            "💡 **Note** : Remplacez les liens par vos vrais formulaires KoboToolbox et "
-            "Google Forms. Vous pouvez aussi intégrer un formulaire Google Forms directement "
-            "via `st.components.v1.iframe()`."
-        )
+        
 
     # ── Résultats ─────────────────────────────────────────────
     with tab_resultats:

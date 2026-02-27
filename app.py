@@ -865,14 +865,14 @@ elif page == "📊 Dashboard":
 elif page == "📝 Évaluation":
     st.markdown('<h1>📝 Évaluation de l\'application</h1>', unsafe_allow_html=True)
 
-    tab_kobo, tab_resultats = st.tabs([
-        "✍️ Formulaire intégré",
-        "🔗 Lien externe (Kobo / Google Forms)",
+tab_kobo, tab_resultats = st.tabs([
+        "🔗 Lien externe (Kobo)",
         "📊 Résultats des évaluations"
-    ])   
+    ])
+
 
     # ── Lien externe ──────────────────────────────────────────
-    with tab_kobo:
+with tab_kobo:
         st.markdown("""
         <div style="margin-bottom:20px;">
             <p style="color:#8aab8c;">
@@ -899,14 +899,15 @@ elif page == "📝 Évaluation":
             """, unsafe_allow_html=True)
             st.link_button(
                 "📋 Ouvrir le formulaire KoboToolbox",
-                "https://ee.kobotoolbox.org/x/VOTRE_FORMULAIRE",
+                "https://ee.kobotoolbox.org/x/w265IXNL",
                 use_container_width=True
             )
 
         
+       
 
     # ── Résultats ─────────────────────────────────────────────
-    with tab_resultats:
+with tab_resultats:
         df_eval = lire_table("evaluations")
         if df_eval.empty:
             st.info("Aucune évaluation soumise pour l'instant.")
